@@ -1,0 +1,30 @@
+services:
+  localstack:
+    container_name: localstack
+    image: localstack/localstack
+    ports:
+      - '4566:4566'
+    environment:
+      - SERVICES=s3
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh
+      - localstack_volume:/var/lib/localstack
+  db:
+    image: postgres
+    container_name: db
+    environment:
+      - POSTGRES_USER=juliano
+      - POSTGRES_PASSWORD=12345678
+      - POSTGRES_DB=report
+    ports:
+      - '5432:5432'
+    restart: always
+    volumes:
+      - ./script.sql:/docker-entrypoint-initdb.d/script.sql
+      - postgres_volume:/var/lib/postgresql/data
+
+volumes:
+  localstack_volume:
+  postgres_volume:
+
