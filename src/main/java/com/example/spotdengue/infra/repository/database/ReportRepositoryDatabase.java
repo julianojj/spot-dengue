@@ -1,9 +1,11 @@
 package com.example.spotdengue.infra.repository.database;
 
+import com.example.spotdengue.core.domain.Address;
 import com.example.spotdengue.core.domain.Report;
 import com.example.spotdengue.core.domain.ReportRepository;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,14 +33,29 @@ public class ReportRepositoryDatabase implements ReportRepository {
             preparedStatement.setString(6, report.getStatus());
             preparedStatement.setTimestamp(7, Timestamp.valueOf(report.getReportDate().atStartOfDay()));
             preparedStatement.execute();
-            for (String image : report.getImages()) {
-                try (PreparedStatement preparedStatementImage = connection.prepareStatement(
-                        "INSERT INTO Image(ReportID, URL) VALUES(?, ?)"
-                )) {
-                    preparedStatementImage.setString(1, report.getID());
-                    preparedStatementImage.setString(2, image);
-                    preparedStatementImage.execute();
-                }
+        }
+
+        try (PreparedStatement preparedStatementAddress = connection.prepareStatement(
+                "INSERT INTO Address(ReportID, State, ZipCode, City, Street, StreetNumber, Neighborhood) VALUES(?, ?, ?, ?, ?, ?, ?)"
+        )) {
+            preparedStatementAddress.setString(1, report.getID());
+            Address address = report.getAddress();
+            preparedStatementAddress.setString(2, address.getState());
+            preparedStatementAddress.setString(3, address.getZipCode());
+            preparedStatementAddress.setString(4, address.getCity());
+            preparedStatementAddress.setString(5, address.getStreet());
+            preparedStatementAddress.setInt(6, address.getStreetNumber());
+            preparedStatementAddress.setString(7, address.getNeighborhood());
+            preparedStatementAddress.execute();
+        }
+
+        for (String image : report.getImages()) {
+            try (PreparedStatement preparedStatementImage = connection.prepareStatement(
+                    "INSERT INTO Image(ReportID, URL) VALUES(?, ?)"
+            )) {
+                preparedStatementImage.setString(1, report.getID());
+                preparedStatementImage.setString(2, image);
+                preparedStatementImage.execute();
             }
         }
     }
@@ -65,19 +82,11 @@ public class ReportRepositoryDatabase implements ReportRepository {
             ResultSet resultSet = statement.executeQuery("SELECT * FROM Report");
             while (resultSet.next()) {
                 Report report = extractReportFromResultSet(resultSet);
-                try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Image WHERE ReportID = ?")) {
-                    preparedStatement.setString(1, report.getID());
-                    ResultSet resultSetImage = preparedStatement.executeQuery();
-                    while (resultSetImage.next()) {
-                        report.addImage(resultSetImage.getString("URL"));
-                    }
-                }
                 reports.add(report);
             }
         }
         return reports;
     }
-
 
     @Override
     public void update(Report report) throws SQLException {
@@ -96,14 +105,54 @@ public class ReportRepositoryDatabase implements ReportRepository {
     }
 
     private Report extractReportFromResultSet(ResultSet resultSet) throws SQLException {
-        return Report.restore(
-                resultSet.getString("ID"),
-                resultSet.getString("MobilePhone"),
-                resultSet.getDouble("Latitude"),
-                resultSet.getDouble("Longitude"),
-                resultSet.getString("Comments"),
-                resultSet.getString("Status"),
-                resultSet.getDate("CreatedAt").toLocalDate()
-        );
+        String reportID = resultSet.getString("ID");
+        String mobilePhone = resultSet.getString("MobilePhone");
+        double latitude = resultSet.getDouble("Latitude");
+        double longitude = resultSet.getDouble("Longitude");
+        Address address = extractAddressFromResultSet(reportID); // Assuming this method exists elsewhere
+        List<String> images = extractImagesFromResultSet(reportID); // Assuming this method exists elsewhere
+        String comments = resultSet.getString("Comments");
+        String status = resultSet.getString("Status");
+        LocalDate createdAt = resultSet.getDate("CreatedAt").toLocalDate();
+        Report report = Report.restore(reportID, mobilePhone, latitude, longitude, address, comments, status, createdAt);
+        for (String image: images) {
+            report.addImage(image);
+        }
+        return report;
+    }
+
+    private Address extractAddressFromResultSet(String reportID) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
+                "SELECT * FROM Address WHERE ReportID = ?"
+        )) {
+            preparedStatement.setString(1, reportID);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return new Address(
+                        resultSet.getString("City"),
+                        resultSet.getString("ZipCode"),
+                        resultSet.getString("State"),
+                        resultSet.getString("Street"),
+                        resultSet.getInt("StreetNumber"),
+                        resultSet.getString("Neighborhood")
+                );
+            }
+        }
+        return null;
+    }
+
+    private List<String> extractImagesFromResultSet(String reportID) throws SQLException {
+        List<String> images = new ArrayList<>();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
+                "SELECT * FROM Image WHERE ReportID = ?"
+        )) {
+            preparedStatement.setString(1, reportID);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    images.add(resultSet.getString("URL"));
+                }
+            }
+        }
+        return images;
     }
 }

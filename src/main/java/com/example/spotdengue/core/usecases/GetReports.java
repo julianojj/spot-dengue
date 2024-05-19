@@ -19,7 +19,21 @@ public class GetReports {
         List<Report> reports =  this.reportRepository.findAll();
         List<GetReportsOutput> output = new ArrayList<>();
         for (Report report: reports) {
-            output.add(new GetReportsOutput(report.getID(), report.getStatus(), report.getComments(), report.getImages()));
+            output.add(new GetReportsOutput(
+                    report.getID(),
+                    report.getGeolocation().getLatitude(),
+                    report.getGeolocation().getLongitude(),
+                    report.getAddress().getCity(),
+                    report.getAddress().getZipCode(),
+                    report.getAddress().getState(),
+                    report.getAddress().getStreet(),
+                    report.getAddress().getStreetNumber(),
+                    report.getAddress().getNeighborhood(),
+                    report.getStatus(),
+                    report.getComments(),
+                    report.getReportDate(),
+                    report.getImages())
+            );
         }
         return output;
     }

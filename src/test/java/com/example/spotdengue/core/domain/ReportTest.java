@@ -7,21 +7,24 @@ public class ReportTest {
 
     @Test
     void testNewReport() {
-        Report report = Report.of("(43) 99999-9999", -1, -1, "test");
+        Address address = new Address("City", "12345678", "PR", "Street", 123, "Neighborhood");
+        Report report = Report.of("(43) 99999-9999", -1, -1, address, "test");
         assertNotNull(report.getID());
         assertEquals("pending", report.getStatus());
     }
 
     @Test
     void testResolveReport() {
-        Report report = Report.of("(43) 99999-9999", -1, -1, "test");
+        Address address = new Address("City", "12345678", "PR", "Street", 123, "Neighborhood");
+        Report report = Report.of("(43) 99999-9999", -1, -1, address, "test");
         report.resolveReport();
         assertEquals("resolved", report.getStatus());
     }
 
     @Test
     void testCancelReport() {
-        Report report = Report.of("(43) 99999-9999", -1, -1, "test");
+        Address address = new Address("City", "12345678", "PR", "Street", 123, "Neighborhood");
+        Report report = Report.of("(43) 99999-9999", -1, -1, address, "test");
         report.cancelReport();
         assertEquals("canceled", report.getStatus());
     }
