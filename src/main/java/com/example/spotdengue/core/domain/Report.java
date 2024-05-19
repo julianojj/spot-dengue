@@ -12,6 +12,7 @@ public class Report {
     private final String ID;
     private final String mobilePhone;
     private final Geolocation geolocation;
+    private final Address address;
     private final String comments;
     private final List<String> images;
     private final LocalDate reportDate;
@@ -22,6 +23,7 @@ public class Report {
             String mobilePhone,
             double latitude,
             double longitude,
+            Address address,
             String comments,
             String status,
             LocalDate reportDate
@@ -29,6 +31,7 @@ public class Report {
         this.ID = id;
         this.mobilePhone = mobilePhone;
         this.geolocation = new Geolocation(latitude, longitude);
+        this.address = address;
         this.comments = comments;
         this.images = new ArrayList<>();
         this.status = status;
@@ -39,6 +42,7 @@ public class Report {
             String mobilePhone,
             double latitude,
             double longitude,
+            Address address,
             String comments
 
     ) {
@@ -47,10 +51,10 @@ public class Report {
                 mobilePhone,
                 latitude,
                 longitude,
+                address,
                 comments,
                 "pending",
-                LocalDate.now()
-        );
+                LocalDate.now());
     }
 
     public static Report restore(
@@ -58,6 +62,7 @@ public class Report {
             String mobilePhone,
             double latitude,
             double longitude,
+            Address address,
             String comments,
             String status,
             LocalDate reportDate
@@ -67,10 +72,10 @@ public class Report {
                 mobilePhone,
                 latitude,
                 longitude,
+                address,
                 comments,
                 status,
-                reportDate
-        );
+                reportDate);
     }
 
     public void addImage(String imageURL) {

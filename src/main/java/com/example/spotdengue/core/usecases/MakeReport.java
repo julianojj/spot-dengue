@@ -1,5 +1,6 @@
 package com.example.spotdengue.core.usecases;
 
+import com.example.spotdengue.core.domain.Address;
 import com.example.spotdengue.core.domain.Report;
 import com.example.spotdengue.core.domain.ReportRepository;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,8 @@ public class MakeReport {
     }
 
     public MakeReportOutput execute(MakeReportInput input) throws Exception {
-        Report report = Report.of(input.mobilePhone(), input.latitude(), input.longitude(), input.comments());
+        Address address = new Address(input.city(), input.zipCode(), input.state(), input.street(), input.streetNumber(), input.neighborhood());
+        Report report = Report.of(input.mobilePhone(), input.latitude(), input.longitude(), address, input.comments());
         for (String inputImage : input.images()) {
             report.addImage(inputImage);
         }
