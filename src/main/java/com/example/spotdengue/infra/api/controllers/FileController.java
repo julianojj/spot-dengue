@@ -1,9 +1,6 @@
 package com.example.spotdengue.infra.api.controllers;
 
-import com.example.spotdengue.core.usecases.GetFile;
-import com.example.spotdengue.core.usecases.UploadFile;
-import com.example.spotdengue.core.usecases.UploadFileInput;
-import com.example.spotdengue.core.usecases.UploadFileOutput;
+import com.example.spotdengue.core.usecases.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +15,8 @@ public class FileController {
     private UploadFile uploadFile;
     @Autowired
     private GetFile getFile;
+    @Autowired
+    private DeleteFile deleteFile;
 
     @PostMapping("/upload_file")
     public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file) throws Exception {
@@ -33,5 +32,11 @@ public class FileController {
     public ResponseEntity<byte[]> getFile(@PathVariable String name) throws Exception {
         byte[] output = getFile.execute(name);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(output);
+    }
+
+    @PostMapping("/remove_file/{id}")
+    public ResponseEntity<Object> deleteFile(@PathVariable String id) throws Exception {
+        this.deleteFile.Execute(id);
+        return ResponseEntity.noContent().build();
     }
 }
