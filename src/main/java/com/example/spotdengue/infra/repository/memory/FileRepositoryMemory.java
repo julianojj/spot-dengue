@@ -24,6 +24,22 @@ public class FileRepositoryMemory implements FileRepository {
     }
 
     @Override
+    public void Delete(String name) throws NotFoundException {
+        File fileToDelete = null;
+        for (File file : this.files) {
+            if (Objects.equals(file.getName(), name)) {
+                fileToDelete = file;
+                break;
+            }
+        }
+        if (fileToDelete != null) {
+            this.files.remove(fileToDelete);
+        } else {
+            throw new NotFoundException("file not found");
+        }
+    }
+
+    @Override
     public byte[] Get(String name) throws Exception {
         for (File file: this.files) {
             if (Objects.equals(file.getName(), name)) {
