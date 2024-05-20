@@ -1,3 +1,3 @@
 package com.example.spotdengue.core.usecases;
 
-public record UploadFileOutput(String path) { }
+public record UploadFileOutput(String id, String path) { }

@@ -19,7 +19,10 @@ public class UploadFile {
             File file = new File(input.name(), input.type(), body.readAllBytes());
             this.fileRepository.Upload(file);
             String path = "http://localhost:8080/get_file/" + file.getName();
-            return new UploadFileOutput(path);
+            return new UploadFileOutput(
+                    file.getName(),
+                    path
+            );
         }
     }
 }
