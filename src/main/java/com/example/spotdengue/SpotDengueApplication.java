@@ -27,6 +27,7 @@ public class SpotDengueApplication {
 	private final GetReports getReports;
 	private final UploadFile uploadFile;
 	private final GetFile getFile;
+	private final DeleteFile deleteFile;
 
 	public SpotDengueApplication() throws SQLException {
 		ReportRepository reportRepository = new ReportRepositoryDatabase();
@@ -38,6 +39,7 @@ public class SpotDengueApplication {
 		this.getReports = new GetReports(reportRepository);
 		this.uploadFile = new UploadFile(fileRepository);
 		this.getFile = new GetFile(fileRepository);
+		this.deleteFile = new DeleteFile(fileRepository);
 	}
 
 	public static void main(String[] args) {
@@ -71,5 +73,10 @@ public class SpotDengueApplication {
 	@Bean
 	public GetFile getFile() {
 		return this.getFile;
+	}
+
+	@Bean
+	public DeleteFile deleteFile() {
+		return this.deleteFile;
 	}
 }

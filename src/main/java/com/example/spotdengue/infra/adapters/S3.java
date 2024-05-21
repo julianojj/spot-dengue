@@ -9,6 +9,7 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -36,6 +37,15 @@ public class S3 implements FileRepository {
                 .key(file.getName())
                 .build();
         this.s3Client.putObject(input, RequestBody.fromBytes(file.getBody()));
+    }
+
+    @Override
+    public void Delete(String name) throws Exception {
+        DeleteObjectRequest input = DeleteObjectRequest.builder()
+                .bucket("report")
+                .key(name)
+                .build();
+        this.s3Client.deleteObject(input);
     }
 
     @Override
