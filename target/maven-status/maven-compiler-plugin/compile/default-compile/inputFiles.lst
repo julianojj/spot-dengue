@@ -18,7 +18,6 @@
 /home/julianosilva/Development/src/spot-dengue/src/main/java/com/example/spotdengue/infra/adapters/S3.java
 /home/julianosilva/Development/src/spot-dengue/src/main/java/com/example/spotdengue/core/domain/Address.java
 /home/julianosilva/Development/src/spot-dengue/src/main/java/com/example/spotdengue/core/usecases/ResolveReportInput.java
-/home/julianosilva/Development/src/spot-dengue/src/main/java/com/example/spotdengue/core/usecases/DeleteFile.java
 /home/julianosilva/Development/src/spot-dengue/src/main/java/com/example/spotdengue/core/usecases/MakeReportInput.java
 /home/julianosilva/Development/src/spot-dengue/src/main/java/com/example/spotdengue/core/usecases/UploadFile.java
 /home/julianosilva/Development/src/spot-dengue/src/main/java/com/example/spotdengue/core/usecases/UploadFileOutput.java
