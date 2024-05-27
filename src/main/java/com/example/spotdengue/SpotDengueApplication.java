@@ -5,19 +5,11 @@ import com.example.spotdengue.core.domain.ReportRepository;
 import com.example.spotdengue.core.usecases.*;
 import com.example.spotdengue.infra.adapters.S3;
 import com.example.spotdengue.infra.repository.database.ReportRepositoryDatabase;
-import com.example.spotdengue.infra.repository.memory.FileRepositoryMemory;
-import com.example.spotdengue.infra.repository.memory.ReportRepositoryMemory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.sql.SQLException;
-import java.util.Arrays;
 
 @SpringBootApplication()
 public class SpotDengueApplication {
