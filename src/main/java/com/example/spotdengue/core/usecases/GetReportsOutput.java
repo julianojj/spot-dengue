@@ -1,6 +1,6 @@
 package com.example.spotdengue.core.usecases;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.List;
 
 public record GetReportsOutput(
@@ -15,6 +15,6 @@ public record GetReportsOutput(
         String neighborhood,
         String status,
         String comments,
-        LocalDate reportDate,
+        Instant reportDate,
         List<String> images
 ){ }

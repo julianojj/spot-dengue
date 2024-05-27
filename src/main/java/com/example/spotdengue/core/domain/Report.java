@@ -2,7 +2,7 @@ package com.example.spotdengue.core.domain;
 
 import lombok.Getter;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -15,7 +15,7 @@ public class Report {
     private final Address address;
     private final String comments;
     private final List<String> images;
-    private final LocalDate reportDate;
+    private final Instant reportDate;
     private String status;
 
     private Report(
@@ -26,7 +26,7 @@ public class Report {
             Address address,
             String comments,
             String status,
-            LocalDate reportDate
+            Instant reportDate
     ) {
         this.ID = id;
         this.mobilePhone = mobilePhone;
@@ -54,7 +54,8 @@ public class Report {
                 address,
                 comments,
                 "pending",
-                LocalDate.now());
+                Instant.now()
+        );
     }
 
     public static Report restore(
@@ -65,7 +66,7 @@ public class Report {
             Address address,
             String comments,
             String status,
-            LocalDate reportDate
+            Instant reportDate
     ) {
         return new Report(
                 id,
@@ -75,7 +76,8 @@ public class Report {
                 address,
                 comments,
                 status,
-                reportDate);
+                reportDate
+        );
     }
 
     public void addImage(String imageURL) {

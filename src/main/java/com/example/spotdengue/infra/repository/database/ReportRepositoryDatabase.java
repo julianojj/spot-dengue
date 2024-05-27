@@ -5,7 +5,7 @@ import com.example.spotdengue.core.domain.Report;
 import com.example.spotdengue.core.domain.ReportRepository;
 
 import java.sql.*;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class ReportRepositoryDatabase implements ReportRepository {
             preparedStatement.setDouble(4, report.getGeolocation().getLongitude());
             preparedStatement.setString(5, report.getComments());
             preparedStatement.setString(6, report.getStatus());
-            preparedStatement.setTimestamp(7, Timestamp.valueOf(report.getReportDate().atStartOfDay()));
+            preparedStatement.setTimestamp(7, Timestamp.from(report.getReportDate()));
             preparedStatement.execute();
         }
 
@@ -98,7 +98,7 @@ public class ReportRepositoryDatabase implements ReportRepository {
             preparedStatement.setDouble(3, report.getGeolocation().getLongitude());
             preparedStatement.setString(4, report.getComments());
             preparedStatement.setString(5, report.getStatus());
-            preparedStatement.setTimestamp(6, Timestamp.valueOf(report.getReportDate().atStartOfDay()));
+            preparedStatement.setTimestamp(6, Timestamp.from(report.getReportDate()));
             preparedStatement.setString(7, report.getID());
             preparedStatement.executeUpdate();
         }
@@ -113,7 +113,7 @@ public class ReportRepositoryDatabase implements ReportRepository {
         List<String> images = extractImagesFromResultSet(reportID); // Assuming this method exists elsewhere
         String comments = resultSet.getString("Comments");
         String status = resultSet.getString("Status");
-        LocalDate createdAt = resultSet.getDate("CreatedAt").toLocalDate();
+        Instant createdAt = resultSet.getTimestamp("CreatedAt").toInstant();
         Report report = Report.restore(reportID, mobilePhone, latitude, longitude, address, comments, status, createdAt);
         for (String image: images) {
             report.addImage(image);
