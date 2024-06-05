@@ -31,6 +31,7 @@ class MakeReportTest {
         MakeReportOutput output = makeReport.execute(input);
         Report report = reportRepository.find(output.reportID());
         assertEquals("pending", report.getStatus());
+        assertEquals("", report.getReason());
     }
 
     @Test
@@ -52,10 +53,11 @@ class MakeReportTest {
                 "Test"
         );
         MakeReportOutput output = makeReport.execute(input);
-        CancelReportInput cancelReportInput = new CancelReportInput(output.reportID());
+        CancelReportInput cancelReportInput = new CancelReportInput(output.reportID(), "Test");
         cancelReport.execute(cancelReportInput);
         Report report = reportRepository.find(output.reportID());
         assertEquals("canceled", report.getStatus());
+        assertEquals("Test", report.getReason());
     }
 
     @Test
@@ -77,9 +79,10 @@ class MakeReportTest {
                 "Test"
         );
         MakeReportOutput output = makeReport.execute(input);
-        ResolveReportInput resolveReportInput = new ResolveReportInput(output.reportID());
+        ResolveReportInput resolveReportInput = new ResolveReportInput(output.reportID(), "Test");
         resolveReport.execute(resolveReportInput);
         Report report = reportRepository.find(output.reportID());
         assertEquals("resolved", report.getStatus());
+        assertEquals("Test", report.getReason());
     }
 }

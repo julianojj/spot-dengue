@@ -18,7 +18,7 @@ public class ResolveReport {
         if (existingReport == null) {
             throw new NotFoundException("report not found");
         }
-        existingReport.resolveReport();
+        existingReport.resolveReport(input.reason());
         reportRepository.update(existingReport);
     }
 }

@@ -18,7 +18,7 @@ public class CancelReport {
         if (existingReport == null) {
             throw new NotFoundException("report not found");
         }
-        existingReport.cancelReport();
+        existingReport.cancelReport(input.reason());
         reportRepository.update(existingReport);
     }
 }
