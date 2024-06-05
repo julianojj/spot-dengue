@@ -31,7 +31,9 @@ public class GetReports {
                     report.getAddress().getNeighborhood(),
                     report.getStatus(),
                     report.getComments(),
+                    report.getReason(),
                     report.getReportDate(),
+                    report.getUpdateDate(),
                     report.getImages())
             );
         }

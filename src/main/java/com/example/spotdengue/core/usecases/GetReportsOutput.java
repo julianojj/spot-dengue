@@ -15,6 +15,8 @@ public record GetReportsOutput(
         String neighborhood,
         String status,
         String comments,
+        String reason,
         Instant reportDate,
+        Instant updateDate,
         List<String> images
 ){ }

@@ -1,5 +1,6 @@
 package com.example.spotdengue.core.domain;
 
+import com.example.spotdengue.core.exceptions.ValidationException;
 import lombok.Getter;
 
 import java.time.Instant;
@@ -14,9 +15,11 @@ public class Report {
     private final Geolocation geolocation;
     private final Address address;
     private final String comments;
+    private String status;
+    private String reason;
     private final List<String> images;
     private final Instant reportDate;
-    private String status;
+    private Instant updateDate;
 
     private Report(
             String id,
@@ -26,7 +29,9 @@ public class Report {
             Address address,
             String comments,
             String status,
-            Instant reportDate
+            String reason,
+            Instant reportDate,
+            Instant updateDate
     ) {
         this.ID = id;
         this.mobilePhone = mobilePhone;
@@ -35,7 +40,9 @@ public class Report {
         this.comments = comments;
         this.images = new ArrayList<>();
         this.status = status;
+        this.reason = reason;
         this.reportDate = reportDate;
+        this.updateDate = updateDate;
     }
 
     public static Report of(
@@ -46,6 +53,7 @@ public class Report {
             String comments
 
     ) {
+        Instant today = Instant.now();
         return new Report(
                 UUID.randomUUID().toString(),
                 mobilePhone,
@@ -54,7 +62,9 @@ public class Report {
                 address,
                 comments,
                 "pending",
-                Instant.now()
+                "",
+                today,
+                today
         );
     }
 
@@ -66,7 +76,9 @@ public class Report {
             Address address,
             String comments,
             String status,
-            Instant reportDate
+            String reason,
+            Instant reportDate,
+            Instant updateDate
     ) {
         return new Report(
                 id,
@@ -76,19 +88,31 @@ public class Report {
                 address,
                 comments,
                 status,
-                reportDate
+                reason,
+                reportDate,
+                updateDate
         );
+    }
+
+    public void validate() throws ValidationException {
+        if (this.mobilePhone.isEmpty()) throw new ValidationException("mobilePhone is required");
     }
 
     public void addImage(String imageURL) {
         images.add(imageURL);
     }
 
-    public void resolveReport() {
+    public void resolveReport(String reason) throws ValidationException {
+        if (reason.isEmpty()) throw new ValidationException("reason is required");
+        this.reason = reason;
+        this.updateDate = Instant.now();
         status = "resolved";
     }
 
-    public void cancelReport() {
+    public void cancelReport(String reason) throws ValidationException {
+        if (reason.isEmpty()) throw new ValidationException("reason is required");
+        this.reason = reason;
+        this.updateDate = Instant.now();
         status = "canceled";
     }
 }

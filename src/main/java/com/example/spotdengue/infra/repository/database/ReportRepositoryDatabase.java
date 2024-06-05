@@ -23,7 +23,7 @@ public class ReportRepositoryDatabase implements ReportRepository {
     @Override
     public void save(Report report) throws SQLException {
         try (PreparedStatement preparedStatement = connection.prepareStatement(
-                "INSERT INTO Report(ID, MobilePhone, Latitude, Longitude, Comments, Status, CreatedAt) VALUES(?, ?, ?, ?, ?, ?, ?)"
+                "INSERT INTO Report(ID, MobilePhone, Latitude, Longitude, Comments, Status, Reason, CreatedAt) VALUES(?, ?, ?, ?, ?, ?, ?, ?)"
         )) {
             preparedStatement.setString(1, report.getID());
             preparedStatement.setString(2, report.getMobilePhone());
@@ -31,7 +31,8 @@ public class ReportRepositoryDatabase implements ReportRepository {
             preparedStatement.setDouble(4, report.getGeolocation().getLongitude());
             preparedStatement.setString(5, report.getComments());
             preparedStatement.setString(6, report.getStatus());
-            preparedStatement.setTimestamp(7, Timestamp.from(report.getReportDate()));
+            preparedStatement.setString(7, "");
+            preparedStatement.setTimestamp(8, Timestamp.from(report.getReportDate()));
             preparedStatement.execute();
         }
 
@@ -91,15 +92,16 @@ public class ReportRepositoryDatabase implements ReportRepository {
     @Override
     public void update(Report report) throws SQLException {
         try (PreparedStatement preparedStatement = connection.prepareStatement(
-                "UPDATE Report SET MobilePhone = ?, Latitude = ?, Longitude = ?, Comments = ?, Status = ?, CreatedAt = ? WHERE ID = ?"
+                "UPDATE Report SET MobilePhone = ?, Latitude = ?, Longitude = ?, Comments = ?, Status = ?, Reason = ?, UpdatedAt = ? WHERE ID = ?"
         )) {
             preparedStatement.setString(1, report.getMobilePhone());
             preparedStatement.setDouble(2, report.getGeolocation().getLatitude());
             preparedStatement.setDouble(3, report.getGeolocation().getLongitude());
             preparedStatement.setString(4, report.getComments());
             preparedStatement.setString(5, report.getStatus());
-            preparedStatement.setTimestamp(6, Timestamp.from(report.getReportDate()));
-            preparedStatement.setString(7, report.getID());
+            preparedStatement.setString(6, report.getReason());
+            preparedStatement.setTimestamp(7, Timestamp.from(report.getUpdateDate()));
+            preparedStatement.setString(8, report.getID());
             preparedStatement.executeUpdate();
         }
     }
@@ -113,8 +115,10 @@ public class ReportRepositoryDatabase implements ReportRepository {
         List<String> images = extractImagesFromResultSet(reportID); // Assuming this method exists elsewhere
         String comments = resultSet.getString("Comments");
         String status = resultSet.getString("Status");
+        String reason = resultSet.getString("Reason");
         Instant createdAt = resultSet.getTimestamp("CreatedAt").toInstant();
-        Report report = Report.restore(reportID, mobilePhone, latitude, longitude, address, comments, status, createdAt);
+        Instant updatedAt = resultSet.getTimestamp("UpdatedAt").toInstant();
+        Report report = Report.restore(reportID, mobilePhone, latitude, longitude, address, comments, status, reason, createdAt, updatedAt);
         for (String image: images) {
             report.addImage(image);
         }
