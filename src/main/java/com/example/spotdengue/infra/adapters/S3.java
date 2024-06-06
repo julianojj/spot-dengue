@@ -8,6 +8,7 @@ import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.connect.model.SuspendContactRecordingRequest;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
@@ -25,7 +26,7 @@ public class S3 implements FileRepository {
         this.s3Client = S3Client.builder()
                 .region(Region.US_WEST_2)
                 .credentialsProvider(credentialsProvider)
-                .endpointOverride(URI.create("http://localhost:4566"))
+                .endpointOverride(URI.create(System.getenv("S3_ENDPOINT")))
                 .forcePathStyle(true)
                 .build();
     }

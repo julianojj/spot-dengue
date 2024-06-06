@@ -14,9 +14,9 @@ public class ReportRepositoryDatabase implements ReportRepository {
 
     public ReportRepositoryDatabase() throws SQLException {
         this.connection = DriverManager.getConnection(
-                "jdbc:postgresql://localhost:5432/report",
-                "juliano",
-                "12345678"
+                System.getenv("DB_ENDPOINT"),
+                System.getenv("DB_USER"),
+                System.getenv("DB_PASS")
         );
     }
 

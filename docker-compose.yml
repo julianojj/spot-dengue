@@ -34,7 +34,7 @@ services:
     restart: always
     environment:
       "S3_ENDPOINT": "http://localstack:4566"
-      "DB_CONNECTION": "jdbc:postgresql://db:5432/report"
+      "DB_ENDPOINT": "jdbc:postgresql://db:5432/report"
       "DB_USER": "juliano"
       "DB_PASS": "12345678"
 
